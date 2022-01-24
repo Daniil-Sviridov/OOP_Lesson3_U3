@@ -12,9 +12,9 @@ namespace L3_u3
         static void Main(string[] args)
         {
 
-            FileInfo fi = new FileInfo("mail.txt");
+            //FileInfo fi = new FileInfo("mail.txt");
 
-            fi.CreateText();
+           // fi.CreateText();
 
         }
     }
