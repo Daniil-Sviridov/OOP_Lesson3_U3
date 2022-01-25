@@ -13,29 +13,43 @@ namespace L3_u3
         {
 
             FileInfo fi = new FileInfo("in_file.txt");
+            FileInfo fo = new FileInfo("out_mail.txt");
 
-            // fi.CreateText();
+            var write = fo.CreateText();
 
             foreach (var line in EnumLines(fi))
             {
                 if (line is null || line.Length == 0) continue;
 
-                string email = line;
+
+
+                var elements = line.Split('&');
+                if (elements.Length != 2) continue;
+
+                string email = elements[1];
                 SearchMail(ref email);
-                Console.WriteLine(email);
 
-                var elements = line.Split(',');
-                //if (elements.Length != 5) continue;
-
-
+                if (email.Length > 0)
+                {
+                    Console.WriteLine($"Добавили : {email}");
+                    write.WriteLine(email);
+                }
             }
-            Console.ReadLine();
-            }
+
+            write.Close();
+
+        }
 
         public static void SearchMail(ref string s)
         {
+            string pattern = "([a-z0-9_-]+)@([a-z0-9_-]+).([a-z.]{2,6})";
+            var rez = System.Text.RegularExpressions.Regex.Match(s.ToLower(), pattern);
 
-            s = s + "1";
+            s = "";
+            if (rez.Success)
+            {
+                s = rez.Value;
+            }
         }
 
         private static IEnumerable<string> EnumLines(FileInfo file)
@@ -46,9 +60,9 @@ namespace L3_u3
                 yield break;
 
             using var reader = file.OpenText();
-                while (!reader.EndOfStream)
-                    yield return reader.ReadLine()!;
-           
+            while (!reader.EndOfStream)
+                yield return reader.ReadLine()!;
+
         }
     }
 }
